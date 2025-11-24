@@ -1,0 +1,82 @@
+{
+  "name": "singapay/payment-gateway",
+  "description": "Official PHP SDK for SingaPay Payment Gateway (Enterprise Edition)",
+  "version": "1.0.0",
+  "keywords": [
+    "singapay",
+    "payment",
+    "gateway",
+    "payment-gateway",
+    "indonesia",
+    "va",
+    "disbursement",
+    "payment-link",
+    "php-sdk"
+  ],
+  "type": "library",
+  "license": "MIT",
+  "homepage": "https://singapay.id",
+  "support": {
+    "email": "dev@singapay.id",
+    "issues": "https://github.com/singapay/payment-gateway/issues",
+    "source": "https://github.com/singapay/payment-gateway"
+  },
+  "authors": [
+    {
+      "name": "SingaPay Team",
+      "email": "dev@singapay.id",
+      "homepage": "https://singapay.id",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": ">=7.4",
+    "ext-curl": "*",
+    "ext-json": "*",
+    "guzzlehttp/guzzle": "^7.0",
+    "psr/log": "^1.1 || ^2.0 || ^3.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.0",
+    "monolog/monolog": "^2.0",
+    "friendsofphp/php-cs-fixer": "^3.0",
+    "phpstan/phpstan": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "SingaPay\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "SingaPay\\Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "test": "phpunit",
+    "lint": "php-cs-fixer fix --dry-run --diff",
+    "fix": "php-cs-fixer fix",
+    "analyse": "phpstan analyse src --level=max"
+  },
+  "suggest": {
+    "monolog/monolog": "For advanced logging capabilities",
+    "ext-redis": "For Redis cache support",
+    "psr/cache": "For PSR-6 cache implementation"
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "sort-packages": true
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "SingaPay\\Laravel\\SingaPayServiceProvider"
+      ],
+      "aliases": {
+        "SingaPay": "SingaPay\\Laravel\\Facades\\SingaPay"
+      }
+    }
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
+}

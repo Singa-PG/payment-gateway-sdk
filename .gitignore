@@ -1,0 +1,120 @@
+
+# Dependency directories
+vendor/
+node_modules/
+coverage/
+dist/
+build/
+
+# Editors / IDE
+.idea/
+.vscode/
+
+# System files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Composer lock (optional for libraries)
+composer.lock
+
+# Logs
+*.log
+logs/
+storage/logs/
+*.pid
+
+# Environment Files (secrets!)
+.env
+.env.*
+!.env.example
+
+# PHP / GENERIC PHP PROJECTS
+# Composer vendor (already above)
+vendor/
+
+# PHPUnit
+.phpunit.result.cache
+phpunit.xml
+phpunit.xml.cache
+
+# PHP CS Fixer
+.php-cs-fixer.cache
+
+# PHPStan / Psalm
+.phpstan/
+psalm.xml
+psalm-cache/
+
+# LARAVEL SPECIFIC
+bootstrap/cache/*
+!bootstrap/cache/.gitignore
+
+storage/*
+!storage/app/
+!storage/framework/
+!storage/logs/
+
+# Laravel generated files
+storage/framework/cache/data/*
+storage/framework/sessions/*
+storage/framework/views/*
+
+# NODE.JS / JAVASCRIPT / TYPESCRIPT
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-store/
+
+# Build artifacts
+dist/
+build/
+.next/
+.nuxt/
+out/
+storybook-static/
+
+# GO / GOLANG
+# Go binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Go build directories
+bin/
+pkg/
+*.test
+
+# Go workspace
+go.work
+go.work.sum
+
+# Generated Go files
+*.out
+*.local
+
+# DOCKER / CONTAINERS
+docker-compose.override.yml
+*.env.docker
+*.env.local
+tmp/
+
+# MERGE HELPER FILES (CUSTOM FROM YOU)
+php/merged-output.txt
+php/merge.sh
+
+# OPTIONAL: EDITOR BACKUP FILES
+*~
+*.bak
+*.tmp
+
+
+# OPTIONAL: OS FILES
+ehthumbs.db
+Icon?
+Desktop.ini
