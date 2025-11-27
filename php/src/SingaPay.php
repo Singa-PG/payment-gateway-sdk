@@ -8,6 +8,12 @@ use SingaPay\Resources\Account;
 use SingaPay\Resources\PaymentLink;
 use SingaPay\Resources\VirtualAccount;
 use SingaPay\Resources\Disbursement;
+use SingaPay\Resources\PaymentLinkHistory;
+use SingaPay\Resources\VATransaction;
+use SingaPay\Resources\BalanceInquiry;
+use SingaPay\Resources\Statement;
+use SingaPay\Resources\Qris;
+use SingaPay\Resources\CardlessWithdrawal;
 use SingaPay\Cache\ArrayCache;
 
 /**
@@ -61,6 +67,36 @@ class SingaPay
      * @var Disbursement Disbursement and transfer features resource
      */
     public $disbursement;
+
+    /**
+     * @var PaymentLinkHistory Payment link history features resource
+     */
+    public $paymentLinkHistory;
+
+    /**
+     * @var VATransaction Virtual account transaction features resource
+     */
+    public $vaTransaction;
+
+    /**
+     * @var BalanceInquiry Balance inquiry features resource
+     */
+    public $balanceInquiry;
+
+    /**
+     * @var Statement Statement features resource
+     */
+    public $statement;
+
+    /**
+     * @var Qris QRIS features resource
+     */
+    public $qris;
+
+    /**
+     * @var CardlessWithdrawal Cardless withdrawal features resource
+     */
+    public $cardlessWithdrawal;
 
     /**
      * Initialize SingaPay SDK with provided configuration
@@ -150,6 +186,15 @@ class SingaPay
         $this->paymentLink = new PaymentLink($this->client, $this->auth, $apiKey);
         $this->virtualAccount = new VirtualAccount($this->client, $this->auth, $apiKey);
         $this->disbursement = new Disbursement($this->client, $this->auth, $this->config);
+
+        $this->paymentLinkHistory = new PaymentLinkHistory($this->client, $this->auth, $apiKey);
+        $this->vaTransaction = new VATransaction($this->client, $this->auth, $apiKey);
+
+        $this->balanceInquiry = new BalanceInquiry($this->client, $this->auth, $apiKey);
+        $this->statement = new Statement($this->client, $this->auth, $apiKey);
+
+        $this->qris = new Qris($this->client, $this->auth, $apiKey);
+        $this->cardlessWithdrawal = new CardlessWithdrawal($this->client, $this->auth, $apiKey);
     }
 
     /**

@@ -11,15 +11,19 @@
     "va",
     "disbursement",
     "payment-link",
-    "php-sdk"
+    "php-sdk",
+    "enterprise",
+    "b2b",
+    "api"
   ],
   "type": "library",
   "license": "MIT",
   "homepage": "https://singapay.id",
   "support": {
-    "email": "dev@singapay.id",
-    "issues": "https://github.com/singapay/payment-gateway/issues",
-    "source": "https://github.com/singapay/payment-gateway"
+    "email": "developer@singapay.id",
+    "issues": "https://github.com/Singa-PG/payment-gateway-sdk/tree/main/php/issues",
+    "source": "https://github.com/Singa-PG/payment-gateway-sdk/tree/main/php",
+    "docs": "https://docs-payment-b2b.singapay.id/docs"
   },
   "authors": [
     {
@@ -27,12 +31,18 @@
       "email": "dev@singapay.id",
       "homepage": "https://singapay.id",
       "role": "Developer"
+    },
+    {
+      "name": "PT. Abadi Singapay Indonesia",
+      "homepage": "https://singapay.id",
+      "role": "Organization"
     }
   ],
   "require": {
     "php": ">=7.4",
     "ext-curl": "*",
     "ext-json": "*",
+    "ext-redis": "*",
     "guzzlehttp/guzzle": "^7.0",
     "psr/log": "^1.1 || ^2.0 || ^3.0"
   },
@@ -40,12 +50,17 @@
     "phpunit/phpunit": "^9.0",
     "monolog/monolog": "^2.0",
     "friendsofphp/php-cs-fixer": "^3.0",
-    "phpstan/phpstan": "^1.0"
+    "phpstan/phpstan": "^1.0",
+    "mockery/mockery": "^1.4",
+    "symfony/var-dumper": "^5.0 || ^6.0"
   },
   "autoload": {
     "psr-4": {
       "SingaPay\\": "src/"
-    }
+    },
+    "files": [
+      "src/Helpers.php"
+    ]
   },
   "autoload-dev": {
     "psr-4": {
@@ -54,18 +69,39 @@
   },
   "scripts": {
     "test": "phpunit",
+    "test-coverage": "phpunit --coverage-html coverage",
     "lint": "php-cs-fixer fix --dry-run --diff",
+    "lint:strict": "php-cs-fixer fix --dry-run --diff --using-cache=no",
     "fix": "php-cs-fixer fix",
-    "analyse": "phpstan analyse src --level=max"
+    "analyse": "phpstan analyse src --level=max",
+    "analyse:ci": "phpstan analyse src --level=max --error-format=github",
+    "check": [
+      "@lint",
+      "@analyse",
+      "@test"
+    ],
+    "post-autoload-dump": [
+      "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+      "@php package:discover"
+    ]
   },
   "suggest": {
     "monolog/monolog": "For advanced logging capabilities",
     "ext-redis": "For Redis cache support",
-    "psr/cache": "For PSR-6 cache implementation"
+    "psr/cache": "For PSR-6 cache implementation",
+    "symfony/cache": "For additional cache adapters",
+    "illuminate/cache": "For Laravel cache integration",
+    "predis/predis": "For Redis client alternative"
   },
   "config": {
     "optimize-autoloader": true,
-    "sort-packages": true
+    "sort-packages": true,
+    "platform": {
+      "php": "7.4.0"
+    },
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    }
   },
   "extra": {
     "laravel": {

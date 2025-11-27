@@ -127,7 +127,11 @@ class FileCache implements CacheInterface
      */
     public function clear()
     {
-        $files = glob($this->cacheDir . '/*');
+        $files = glob($this->cacheDir . '/*.cache');
+
+        if ($files === false) {
+            return false;
+        }
 
         foreach ($files as $file) {
             if (is_file($file)) {
@@ -137,6 +141,7 @@ class FileCache implements CacheInterface
 
         return true;
     }
+
 
     /**
      * Check for item existence and validity in file cache
@@ -165,6 +170,40 @@ class FileCache implements CacheInterface
         }
 
         return true;
+    }
+
+    /**
+     * Clean up expired cache files
+     * 
+     * @return int Number of files cleaned
+     */
+    public function cleanup()
+    {
+        $files = glob($this->cacheDir . '/*.cache');
+        $cleaned = 0;
+
+        if ($files === false) {
+            return 0;
+        }
+
+        foreach ($files as $file) {
+            if (!is_file($file)) {
+                continue;
+            }
+
+            $data = @unserialize(file_get_contents($file));
+
+            if ($data === false) {
+                continue;
+            }
+
+            if ($data['expiry'] !== null && time() > $data['expiry']) {
+                unlink($file);
+                $cleaned++;
+            }
+        }
+
+        return $cleaned;
     }
 
     /**

@@ -133,7 +133,8 @@ class Response
      */
     public function getData()
     {
-        return $this->body['data'] ?? null;
+        // return $this->body['data'] ?? null;
+        return $this->body ?? null;
     }
 
     /**
