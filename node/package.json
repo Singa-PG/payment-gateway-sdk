@@ -46,12 +46,13 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/singapay/payment-gateway.git"
+    "url": "git+https://github.com/Singa-PG/payment-gateway-sdk.git",
+    "directory": "node"
   },
   "bugs": {
-    "url": "https://github.com/singapay/payment-gateway/issues"
+    "url": "https://github.com/Singa-PG/payment-gateway-sdk/issues"
   },
-  "homepage": "https://github.com/singapay/payment-gateway#readme",
+  "homepage": "https://github.com/Singa-PG/payment-gateway-sdk/tree/main/node#readme",
   "dependencies": {
     "axios": "^1.6.0"
   },

@@ -18,10 +18,10 @@
   ],
   "type": "library",
   "license": "MIT",
-  "homepage": "https://singapay.id",
+  "homepage": "https://github.com/Singa-PG/payment-gateway-sdk/tree/main/php",
   "support": {
     "email": "developer@singapay.id",
-    "issues": "https://github.com/Singa-PG/payment-gateway-sdk/tree/main/php/issues",
+    "issues": "https://github.com/Singa-PG/payment-gateway-sdk/issues",
     "source": "https://github.com/Singa-PG/payment-gateway-sdk/tree/main/php",
     "docs": "https://docs-payment-b2b.singapay.id/docs"
   },
