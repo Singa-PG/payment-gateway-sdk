@@ -1,0 +1,27 @@
+# Source files
+src/
+test/
+examples/
+
+# Config files
+.github/
+.vscode/
+tsconfig.json
+eslint.config.js
+
+# Environment
+.env*
+
+# Git
+.git/
+.gitignore
+
+# OS
+.DS_Store
+
+# Logs
+*.log
+
+# CI/CD
+.travis.yml
+.circleci/
