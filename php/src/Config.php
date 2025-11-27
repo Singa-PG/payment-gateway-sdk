@@ -296,4 +296,37 @@ class Config
         $this->customHeaders[$name] = $value;
         return $this;
     }
+
+    /**
+     * Remove a custom HTTP header.
+     *
+     * @param string $name Header name
+     * @return $this
+     */
+    public function removeCustomHeader($name)
+    {
+        unset($this->customHeaders[$name]);
+        return $this;
+    }
+
+    /**
+     * Convert config to array
+     * 
+     * @return array
+     */
+    public function toArray()
+    {
+        return [
+            'client_id' => $this->clientId,
+            'client_secret' => '***HIDDEN***',
+            'api_key' => substr($this->apiKey, 0, 8) . '...',
+            'environment' => $this->environment,
+            'base_url' => $this->baseUrl,
+            'timeout' => $this->timeout,
+            'max_retries' => $this->maxRetries,
+            'retry_delay' => $this->retryDelay,
+            'auto_reauth' => $this->autoReauth,
+            'cache_ttl' => $this->cacheTtl,
+        ];
+    }
 }

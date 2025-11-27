@@ -1,21 +1,33 @@
 # SingaPay PHP SDK
 
-Official PHP SDK for SingaPay Payment Gateway
+<!-- [![Latest Version](https://img.shields.io/packagist/v/singapay/payment-gateway.svg)](https://packagist.org/packages/singapay/payment-gateway)
+[![License](https://img.shields.io/packagist/l/singapay/payment-gateway.svg)](https://packagist.org/packages/singapay/payment-gateway)
+[![PHP Version](https://img.shields.io/packagist/php-v/singapay/payment-gateway.svg)](https://packagist.org/packages/singapay/payment-gateway) -->
 
-## Overview
+Official PHP SDK for seamless integration with SingaPay Payment Gateway. This SDK provides a comprehensive, easy-to-use interface for accessing SingaPay's payment services including virtual accounts, payment links, QRIS, disbursements, and more.
 
-The SingaPay PHP SDK provides a seamless integration with SingaPay's payment gateway services. This SDK supports various payment methods and features including virtual accounts, payment links, disbursements, and more.
+## What is SingaPay SDK?
+
+SingaPay PHP SDK is a powerful library that simplifies the integration of SingaPay payment services into your PHP applications. It handles authentication, request signing, error handling, and provides an intuitive API for all SingaPay features.
+
+### Key Benefits
+
+- **Easy Integration**: Simple, fluent API design for quick implementation
+- **Secure by Default**: Built-in authentication, signature generation, and webhook verification
+- **Production Ready**: Automatic retry logic, token caching, and comprehensive error handling
+- **Framework Support**: Native support for Laravel, CodeIgniter, Symfony, and vanilla PHP
+- **Type Safe**: Full type hints and validation for better IDE support
 
 ## Requirements
 
 - PHP 7.4 or higher
-- cURL extension
-- JSON extension
-- GuzzleHTTP 7.0+
+- cURL extension enabled
+- JSON extension enabled
+- Composer (recommended)
 
-## Installation
+## Quick Installation
 
-### Using Composer
+### Using Composer (Recommended)
 
 ```bash
 composer require singapay/payment-gateway
@@ -23,17 +35,154 @@ composer require singapay/payment-gateway
 
 ### Manual Installation
 
-Download the SDK and include the autoloader:
+1. Download the SDK from [GitHub releases](https://github.com/singapay/php-sdk/releases)
+2. Extract the archive
+3. Include the autoloader in your project:
 
 ```php
-require_once '/path/to/sdk/vendor/autoload.php';
+require_once '/path/to/singapay-sdk/vendor/autoload.php';
 ```
 
-## Configuration
+## Framework-Specific Installation
 
-### Basic Configuration
+### Laravel
+
+Install via Composer:
+
+```bash
+composer require singapay/payment-gateway
+```
+
+Publish the configuration file:
+
+```bash
+php artisan vendor:publish --tag=singapay-config
+```
+
+Configure in `config/singapay.php` or `.env`:
+
+```env
+SINGAPAY_CLIENT_ID=your-client-id
+SINGAPAY_CLIENT_SECRET=your-client-secret
+SINGAPAY_API_KEY=your-api-key
+SINGAPAY_HMAC_KEY=your-hmac-key
+SINGAPAY_ENVIRONMENT=sandbox
+```
+
+Use in your code:
 
 ```php
+use SingaPay\SingaPay;
+
+class PaymentController extends Controller
+{
+    private $singapay;
+
+    public function __construct(SingaPay $singapay)
+    {
+        $this->singapay = $singapay;
+    }
+
+    public function createPayment()
+    {
+        $account = $this->singapay->account->get('your-account-id');
+        return response()->json($account);
+    }
+}
+```
+
+### CodeIgniter 4
+
+Install via Composer:
+
+```bash
+composer require singapay/payment-gateway
+```
+
+Create a service in `app/Config/Services.php`:
+
+```php
+use SingaPay\SingaPay;
+
+public static function singapay($getShared = true)
+{
+    if ($getShared) {
+        return static::getSharedInstance('singapay');
+    }
+
+    return new SingaPay([
+        'client_id' => getenv('SINGAPAY_CLIENT_ID'),
+        'client_secret' => getenv('SINGAPAY_CLIENT_SECRET'),
+        'api_key' => getenv('SINGAPAY_API_KEY'),
+        'hmac_validation_key' => getenv('SINGAPAY_HMAC_KEY'),
+        'environment' => getenv('SINGAPAY_ENVIRONMENT'),
+    ]);
+}
+```
+
+Use in your controller:
+
+```php
+namespace App\Controllers;
+
+class Payment extends BaseController
+{
+    public function index()
+    {
+        $singapay = service('singapay');
+        $accounts = $singapay->account->list();
+
+        return $this->response->setJSON($accounts);
+    }
+}
+```
+
+### Symfony
+
+Install via Composer:
+
+```bash
+composer require singapay/payment-gateway
+```
+
+Register as a service in `config/services.yaml`:
+
+```yaml
+services:
+  SingaPay\SingaPay:
+    arguments:
+      $config:
+        client_id: "%env(SINGAPAY_CLIENT_ID)%"
+        client_secret: "%env(SINGAPAY_CLIENT_SECRET)%"
+        api_key: "%env(SINGAPAY_API_KEY)%"
+        hmac_validation_key: "%env(SINGAPAY_HMAC_KEY)%"
+        environment: "%env(SINGAPAY_ENVIRONMENT)%"
+```
+
+Use in your controller:
+
+```php
+namespace App\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use SingaPay\SingaPay;
+
+class PaymentController extends AbstractController
+{
+    public function index(SingaPay $singapay)
+    {
+        $accounts = $singapay->account->list();
+        return $this->json($accounts);
+    }
+}
+```
+
+### Vanilla PHP
+
+```php
+<?php
+require_once 'vendor/autoload.php';
+
 use SingaPay\SingaPay;
 
 $singapay = new SingaPay([
@@ -43,139 +192,155 @@ $singapay = new SingaPay([
     'hmac_validation_key' => 'your-hmac-key',
     'environment' => 'sandbox', // or 'production'
 ]);
+
+// Use the SDK
+$accounts = $singapay->account->list();
+print_r($accounts);
 ```
 
-### Enhanced Configuration
+### WordPress
+
+Add to your theme's `functions.php` or create a plugin:
 
 ```php
+require_once get_template_directory() . '/vendor/autoload.php';
+
+use SingaPay\SingaPay;
+
+function get_singapay_instance() {
+    static $singapay = null;
+
+    if ($singapay === null) {
+        $singapay = new SingaPay([
+            'client_id' => get_option('singapay_client_id'),
+            'client_secret' => get_option('singapay_client_secret'),
+            'api_key' => get_option('singapay_api_key'),
+            'hmac_validation_key' => get_option('singapay_hmac_key'),
+            'environment' => get_option('singapay_environment', 'sandbox'),
+        ]);
+    }
+
+    return $singapay;
+}
+
+// Use in your code
+add_action('init', function() {
+    $singapay = get_singapay_instance();
+    // Your payment logic here
+});
+```
+
+## Quick Start Example
+
+```php
+<?php
+require_once 'vendor/autoload.php';
+
+use SingaPay\SingaPay;
+
+// Initialize SDK
 $singapay = new SingaPay([
     'client_id' => 'your-client-id',
     'client_secret' => 'your-client-secret',
     'api_key' => 'your-api-key',
     'hmac_validation_key' => 'your-hmac-key',
     'environment' => 'sandbox',
-
-    // Enhanced features
-    'timeout' => 60,
-    'max_retries' => 5,
-    'retry_delay' => 2000,
-    'auto_reauth' => true,
-    'cache_ttl' => 1800,
-    'custom_headers' => [
-        'X-Custom-Header' => 'CustomValue'
-    ]
-]);
-```
-
-### Factory Pattern for Multiple Configurations
-
-```php
-use SingaPay\SingaPayFactory;
-
-// Set default configuration
-SingaPayFactory::setDefaultConfig([
-    'client_id' => 'default-client-id',
-    'client_secret' => 'default-client-secret',
-    'api_key' => 'default-api-key',
-    'environment' => 'sandbox',
 ]);
 
-// Create multiple instances
-$clientA = SingaPayFactory::create($configA, 'client_a');
-$clientB = SingaPayFactory::create($configB, 'client_b');
+try {
+    // Create a virtual account
+    $va = $singapay->virtualAccount->create('account-id', [
+        'bank_code' => 'BCA',
+        'amount' => 100000,
+        'kind' => 'temporary',
+        'expired_at' => '2024-12-31 23:59:59',
+        'reference_number' => 'ORDER-12345'
+    ]);
 
-// Get instances by name
-$clientA = SingaPayFactory::get('client_a');
+    echo "Virtual Account Created: " . $va['va_number'];
+
+    // Create a payment link
+    $paymentLink = $singapay->paymentLink->create('account-id', [
+        'reff_no' => 'PL-12345',
+        'title' => 'Product Purchase',
+        'total_amount' => 100000,
+        'items' => [
+            [
+                'name' => 'Product A',
+                'quantity' => 1,
+                'unit_price' => 100000
+            ]
+        ]
+    ]);
+
+    echo "Payment Link: " . $paymentLink['payment_url'];
+
+} catch (\SingaPay\Exceptions\ValidationException $e) {
+    echo "Validation Error: " . $e->getMessage();
+    print_r($e->getErrors());
+} catch (\SingaPay\Exceptions\ApiException $e) {
+    echo "API Error: " . $e->getMessage();
+}
 ```
 
 ## Available Features
 
-### Account Management
+The SDK provides access to all SingaPay services:
 
-- `list()` - Retrieve list of accounts
-- `get($accountId)` - Get account details
-- `create(array $data)` - Create new account
-- `updateStatus($accountId, $status)` - Update account status
-- `delete($accountId)` - Delete account
+- **Account Management** - Create and manage accounts
+- **Virtual Accounts** - Generate and manage virtual account numbers
+- **Payment Links** - Create shareable payment links
+- **QRIS** - Generate dynamic QRIS codes
+- **Disbursement** - Transfer funds to bank accounts
+- **Cardless Withdrawal** - ATM withdrawals without cards
+- **Balance Inquiry** - Check account balances
+- **Statements** - Retrieve transaction statements
+- **Payment History** - Track payment transactions
 
-### Payment Links
+## Documentation
 
-- `list($accountId)` - Retrieve payment links
-- `get($accountId, $paymentLinkId)` - Get payment link details
-- `create($accountId, array $data)` - Create payment link
-- `update($accountId, $paymentLinkId, array $data)` - Update payment link
-- `delete($accountId, $paymentLinkId)` - Delete payment link
-- `getAvailablePaymentMethods()` - Get available payment methods
+For complete documentation, please visit:
 
-### Virtual Accounts
+- **[Full Documentation](./docs/DOCUMENTATION.md)** - Complete API reference
+- **[API Reference](./docs/API_REFERENCE.md)** - Detailed method documentation
+- **[Examples](./docs/EXAMPLES.md)** - Practical code examples
+- **[Advanced Usage](./docs/ADVANCED.md)** - Advanced features and configurations
+- **[Webhook Guide](./docs/WEBHOOKS.md)** - Webhook integration guide
 
-- `list($accountId)` - Retrieve virtual accounts
-- `get($accountId, $vaId)` - Get virtual account details
-- `create($accountId, array $data)` - Create virtual account
-- `update($accountId, $vaId, array $data)` - Update virtual account
-- `delete($accountId, $vaId)` - Delete virtual account
+## Support & Resources
 
-### Disbursement
+- **Official Documentation**: [https://docs.singapay.id](https://docs.singapay.id)
+- **API Documentation**: [https://api-docs.singapay.id](https://api-docs.singapay.id)
+- **Developer Portal**: [https://developer.singapay.id](https://developer.singapay.id)
+- **GitHub Issues**: [https://github.com/singapay/php-sdk/issues](https://github.com/singapay/php-sdk/issues)
+- **Email Support**: developer@singapay.id
 
-- `list($accountId)` - Retrieve disbursement history
-- `get($accountId, $transactionId)` - Get disbursement details
-- `checkFee($accountId, $amount, $bankSwiftCode)` - Check transfer fee
-- `checkBeneficiary($bankAccountNumber, $bankSwiftCode)` - Check beneficiary account
-- `transfer($accountId, array $data)` - Transfer funds
+## Testing
 
-## Advanced Features
+```bash
+# Run tests
+composer test
 
-### Retry Mechanism
+# Run tests with coverage
+composer test:coverage
+```
 
-- Automatic retry on failed requests
-- Configurable retry attempts and delay
-- Exponential backoff strategy
+## Security
 
-### Authentication & Caching
+If you discover any security vulnerabilities, please email security@singapay.id instead of using the issue tracker.
 
-- Automatic token management
-- Token caching with TTL
-- Auto-refresh on token expiration
+## Contributing
 
-### Error Handling
-
-- Comprehensive exception hierarchy
-- Validation error details
-- HTTP status code mapping
-
-### Monitoring & Metrics
-
-- Request/response logging
-- Performance metrics
-- Success/failure statistics
-
-### Webhook Verification
-
-- HMAC signature verification
-- Timestamp validation
-- Payload integrity check
-
-## Utility Methods
-
-- `testConnection()` - Test API connectivity
-- `getMetrics()` - Get request metrics
-- `verifyWebhookSignature()` - Verify webhook authenticity
-- `flushAuthCache()` - Clear authentication cache
-- `addInterceptor()` - Add request/response interceptor
-
-## Error Handling
-
-The SDK throws specific exceptions for different error scenarios:
-
-- `SingaPayException` - Base exception class
-- `AuthenticationException` - Authentication failures
-- `ValidationException` - Request validation errors
-- `ApiException` - API communication errors
-
-## Support
-
-For detailed API documentation and additional examples, please refer to the official SingaPay documentation.
+Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) for details.
 
 ## License
 
-This SDK is released under the MIT License.
+This SDK is open-sourced software licensed under the [MIT license](LICENSE).
+
+## Changelog
+
+Please see [CHANGELOG](CHANGELOG.md) for recent changes.
+
+---
+
+Made by **SingaPay**
